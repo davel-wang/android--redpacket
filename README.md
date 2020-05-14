@@ -1,4 +1,4 @@
 # android--redpacket
 
-fllow:
+follow:
 https://github.com/CKTim/RedPacket
