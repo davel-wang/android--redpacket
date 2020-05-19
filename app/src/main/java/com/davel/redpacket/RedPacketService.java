@@ -28,7 +28,7 @@ public class RedPacketService extends AccessibilityService {
      */
     private String LAUCHER = "com.tencent.mm.ui.LauncherUI";
     private String LUCKEY_MONEY_DETAIL = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI";
-    private String LUCKEY_MONEY_RECEIVER = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI";
+    private String LUCKEY_MONEY_RECEIVER = "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyNotHookReceiveUI";
 
     /**
      * 用于判断是否点击过红包了
@@ -60,6 +60,7 @@ public class RedPacketService extends AccessibilityService {
             //通知栏来信息，判断是否含有微信红包字样，是的话跳转
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
                 List<CharSequence> texts = event.getText();
+                Log.e("RedPacket",texts.toString());
                 for (CharSequence text : texts) {
                     String content = text.toString();
                     if (!TextUtils.isEmpty(content)) {
@@ -79,6 +80,7 @@ public class RedPacketService extends AccessibilityService {
             //界面跳转的监听
             case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
                 String className = event.getClassName().toString();
+                Log.e("onAccessibilityEvent",className);
                 //判断是否是微信聊天界面
                 if (LAUCHER.equals(className)) {
                     //获取当前聊天页面的根布局
@@ -137,7 +139,11 @@ public class RedPacketService extends AccessibilityService {
                     continue;
                 }
                 CharSequence text = node.getText();
-                if (text != null && text.toString().equals("领取红包")) {
+                if (text != null){
+                    Log.e("RedPacket",  "findRedPacket "+text.toString());
+                }
+
+                if (text != null && text.toString().equals("微信红包")) {
                     AccessibilityNodeInfo parent = node.getParent();
                     //while循环,遍历"领取红包"的各个父布局，直至找到可点击的为止
                     while (parent != null) {
@@ -186,6 +192,7 @@ public class RedPacketService extends AccessibilityService {
      */
     @Override
     protected void onServiceConnected() {
+        Log.e("RedPacket",  "抢红包服务开启");
         Toast.makeText(this, "抢红包服务开启", Toast.LENGTH_SHORT).show();
         super.onServiceConnected();
     }
@@ -195,6 +202,7 @@ public class RedPacketService extends AccessibilityService {
      */
     @Override
     public void onInterrupt() {
+        Log.e("RedPacket",  "我快被终结了啊");
         Toast.makeText(this, "我快被终结了啊-----", Toast.LENGTH_SHORT).show();
     }
 
@@ -203,6 +211,7 @@ public class RedPacketService extends AccessibilityService {
      */
     @Override
     public boolean onUnbind(Intent intent) {
+        Log.e("RedPacket",  "抢红包服务已被关闭");
         Toast.makeText(this, "抢红包服务已被关闭", Toast.LENGTH_SHORT).show();
         return super.onUnbind(intent);
     }
